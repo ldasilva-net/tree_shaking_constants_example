@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Flutter Optimization: Tree Shaking and Compilation Constants</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.min.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Trimming the Flutter Tree</h1>
+					<h3>Tree Shaking and Compilation Constants</h3>
+					<p>By Liber Da Silva</p>
+				</section>
+
+				<section>
+					<h2>Agenda</h2>
+					<ul>
+						<li>Understanding Tree Shaking</li>
+						<li>Compilation Constants vs Runtime Constants</li>
+						<li>Optimizing with Compilation Constants</li>
+						<li>Using dart-define</li>
+						<li>Practical Examples</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Tree Shaking in Flutter</h2>
+						<p>Removing unused code from the final application</p>
+					</section>
+					<section>
+						<h3>How Tree Shaking Works</h3>
+						<ol>
+							<li>Static code analysis</li>
+							<li>Building dependency tree</li>
+							<li>Identifying dead code</li>
+							<li>Removal during compilation</li>
+						</ol>
+					</section>
+					<section>
+						<h3>Importance</h3>
+						<ul>
+							<li>Reduces app size</li>
+							<li>Improves performance</li>
+							<li>Optimizes for multiple configs</li>
+							<li>Cons: We don't have reflection</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Compilation Constants vs Runtime Constants</h2>
+					</section>
+					<section>
+						<h3>Compilation Constants</h3>
+						<ul>
+							<li>Resolved at compile-time</li>
+							<li>Allow aggressive optimizations</li>
+							<li>No runtime memory overhead</li>
+						</ul>
+						<pre><code class="hljs" data-trim data-line-numbers>
+							const color = Color(0xFFC4C4C4);
+							const apiKey = String.fromEnvironment('API_KEY');
+						</code></pre>
+					</section>
+					<section>
+						<h3>Inlining and Compile-Time Evaluation</h3>
+						<pre><code class="hljs" data-trim data-line-numbers>
+						const int value1 = 10;
+						const int value2 = 20;
+						const int sumValues = value1 + value2; // Calculated at compile-time
+						</code></pre>
+					</section>
+					<section>
+						<h3>Runtime Constants</h3>
+						<ul>
+							<li>Resolved at runtime</li>
+							<li>More flexible, but limit optimizations</li>
+							<li>Occupy memory during execution</li>
+						</ul>
+					</section>
+						<section>
+								<h3>Example</h3>
+								<ul>
+									<li>Instance reuse</li>
+									<li>Improved rebuild performance</li>
+								</ul>
+								<pre><code class="hljs" data-trim data-line-numbers>
+		class MyWidget extends StatelessWidget {
+			const MyWidget({Key? key, required this.title}) : super(key: key);
+		
+			final String title;
+		
+			@override
+			Widget build(BuildContext context) {
+				return Text(title);
+			}
+		}
+		
+		// Usage
+		const widget = MyWidget(title: 'Example');
+								</code></pre>
+							</section>
+						
+				</section>
+
+				<section>
+					<section>
+						<h2>Optimizing with Compilation Constants</h2>
+					</section>
+					<section>
+						<h3>Dead Code Elimination</h3>
+						<pre><code class="hljs" data-trim data-line-numbers>
+const bool isDebug = bool.fromEnvironment('DEBUG');
+
+void main() {
+  if (isDebug) {
+    // This code will be removed in production
+    setupDebugTools();
+  }
+}
+						</code></pre>
+					</section>					
+				</section>
+
+				<section>
+					<section>
+						<h2>Using dart-define</h2>
+					</section>
+					<section>
+						<h3>Command Line Usage</h3>
+						<pre><code class="hljs" data-trim data-line-numbers>
+				flutter run --dart-define=API_KEY=my_api_key
+						</code></pre>
+					</section>
+					<section>
+						<h3>In Code</h3>
+						<pre><code class="hljs" data-trim data-line-numbers>
+				const apiKey = String.fromEnvironment('API_KEY');
+						</code></pre>
+					</section>
+					<section>
+						<h3>Loading from File</h3>
+						<p>Create a .env (or .json) file:</p>
+						<pre><code class="hljs" data-trim data-line-numbers>
+				API_KEY=my_api_key
+				DEBUG_MODE=true
+						</code></pre>
+						<p>Run with:</p>
+						<pre><code class="hljs" data-trim data-line-numbers>
+				flutter run --dart-define-from-file=.env
+						</code></pre>
+						<p>Access in code:</p>
+						<pre><code class="hljs" data-trim data-line-numbers>
+				const apiKey = String.fromEnvironment('API_KEY');
+				const debugMode = bool.fromEnvironment('DEBUG_MODE');
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Practical Examples</h2>
+					<p>Let's code!</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/markdown/markdown.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
