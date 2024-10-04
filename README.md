@@ -1,4 +1,4 @@
-# Tree Shaking Constants Example
+# Flutter Tree Shaking Constants Example
 
 This project demonstrates the power of tree shaking in Flutter using compile-time constants. It showcases how to optimize your Flutter app by removing unused code based on the target platform.
 
