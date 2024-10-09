@@ -6,7 +6,7 @@ This project demonstrates the power of tree shaking in Flutter using compile-tim
 [View presentation](https://ldasilva-net.github.io/tree_shaking_constants_example/presentation.html)
 
 ## Video explanation (spanish)
-<img src="video_cover.jpg" width="60%">
+<img src="video_cover.jpg" width="80%">
 
 
 ## Project Structure
