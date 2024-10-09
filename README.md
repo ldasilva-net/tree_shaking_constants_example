@@ -3,10 +3,11 @@
 This project demonstrates the power of tree shaking in Flutter using compile-time constants. It showcases how to optimize your Flutter app by removing unused code based on the target platform.
 
 ## Presentation
-[View presentation](presentation.html)
+[View presentation](https://ldasilva-net.github.io/tree_shaking_constants_example/presentation.html)
 
 ## Video explanation (spanish)
-[![View video explanation](video_cover.jpg)](https://youtu.be/Ur-iS3wR99k)
+<img src="video_cover.jpg" width="60%">
+
 
 ## Project Structure
 
